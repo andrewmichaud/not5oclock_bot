@@ -23,7 +23,9 @@ while true; do
     # TODO make this less garbage
     TZ_CMD="$BIG_AREA \n $SMALL_AREA \n 1 \n 1 \n"
 
-    NAME=$(echo "$TZ_CMD" | tzselect 2>/dev/null | sed -r s'/(.*)\/(.*)/\2, \1/')
+    # TODO find a way to get cities in here, it's kind of lame right now.
+    # NAME=$(echo "$TZ_CMD" | tzselect 2>/dev/null | sed -r s'/(.*)\/(.*)/\2, \1/')
+    NAME=$(echo "$TZ_CMD" | tzselect 2>/dev/null)
 
     TIME_REGEX="/.*([0-9]{2}:[0-9]{2}:[0-9]{2}).*/\1/"
 
@@ -46,7 +48,7 @@ while true; do
     fi
 
     DESC=$(shuf -n 1 < "$DESC_FILE")
-    MSG="It's not $DESC in $NAME, it's $TIME local time."
+    MSG="It's not $DESC in timezone $NAME, it's $TIME there."
 
     echo "$MSG"
 
