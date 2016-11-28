@@ -1,0 +1,42 @@
+#!/bin/sh
+
+# Get random pair from tz_map file.
+# This is a city and country or a country and some sort of area.
+ROW=$(shuf -n 1 < tz_map)
+echo "DEBUG: ROW: $ROW"
+
+BIG_AREA=$(echo "$ROW" | cut -d ' ' -f 1)
+echo "DEBUG: BIG_AREA: $BIG_AREA"
+
+SMALL_AREA_CAP=$(echo "$ROW" | cut -d ' ' -f 2)
+SMALL_AREA=$(shuf -i 1-"$SMALL_AREA_CAP" -n 1)
+echo "DEBUG: SMALL_AREA: $SMALL_AREA"
+
+# Use tzselect to turn the number pair into the actual names, and also get the time there.
+# Takes two passes, unless I can find a way to be more clever.
+# TODO make this less garbage
+TZ_CMD="$BIG_AREA \n $SMALL_AREA \n 1 \n 1 \n"
+
+NAME=$(echo "$TZ_CMD" | tzselect 2>/dev/null | sed -r s'/(.*)\/(.*)/\2, \1/')
+
+TIME_REGEX="/.*([0-9]{2}:[0-9]{2}:[0-9]{2}).*/\1/"
+
+TIME=$(echo "$TZ_CMD" | tzselect 2>&1 | grep "Local time" | sed -r s"$TIME_REGEX")
+
+echo "DEBUG: NAME: $NAME"
+echo "DEBUG: TIME: $TIME"
+
+# Check hour.
+HOUR=$(echo "$TIME" | sed -r s'/([0-9]{2}).*/\1/')
+
+echo "DEBUG: HOUR IS $HOUR"
+
+if [ "$HOUR" = "17" ]; then
+    echo "DEBUG: It's 5 'o' clock!"
+else
+    echo "DEBUG: It's not 5 'o' clock!"
+fi
+
+MSG="It's not 5 'o' clock in $NAME, it's $TIME."
+
+echo "$MSG"
