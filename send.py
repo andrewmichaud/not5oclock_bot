@@ -7,7 +7,7 @@ import botskeleton
 
 if __name__ == "__main__":
     SECRETS_DIR = path.join(path.abspath(path.dirname(__file__)), "SECRETS")
-    botskeleton = botskeleton.BotSkeleton(SECRETS_DIR, bot_name="isthisska_bot")
+    botskeleton = botskeleton.BotSkeleton(SECRETS_DIR, bot_name="not5oclock_bot")
 
     # Get arg.
     # Could probably do it more simply - this is doing it properly but half-assed.
